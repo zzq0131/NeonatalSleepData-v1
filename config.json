@@ -1,0 +1,154 @@
+{
+  "release": {
+    "release_id": "NeonatalSleepData_release200_v1",
+    "expected_subjects": 200,
+    "stage_codes": {
+      "W": 0,
+      "N": 1,
+      "R": 2,
+      "T": 3
+    }
+  },
+  "data": {
+    "edf_dir": "data/source_edf",
+    "edf_glob": "NSD*.edf",
+    "eeg100_dir": "data/eeg_100hz",
+    "eeg100_glob": "NSD*.npz",
+    "aeeg_epoch_dir": "data/aeeg_epoch",
+    "aeeg_glob": "NSD*.npz"
+  },
+  "preprocessing": {
+    "edf_target_rate_hz": 500,
+    "eeg100_target_rate_hz": 100,
+    "edf_bandpass_hz": [0.5, 35.0],
+    "edf_notch_hz": 50.0,
+    "edf_notch_q": 30.0,
+    "eeg100_values_unit": "V",
+    "aeeg_bandpass_hz": [2.0, 15.0],
+    "aeeg_smoothing_hz": 0.5,
+    "epoch_seconds": 30
+  },
+  "outputs": {
+    "prepared_root": "outputs/prepared",
+    "sanitized_edf_dir": "outputs/prepared/edf",
+    "validation_root": "outputs/validation",
+    "statistics_root": "outputs/statistics",
+    "baselines_root": "outputs/baselines"
+  },
+  "splits_file": "splits.json",
+  "baselines": {
+    "seed": 20260711,
+    "bootstrap_repetitions": 2000,
+    "rf": {
+      "winsorize_quantiles": [0.001, 0.999],
+      "correlation_threshold": 0.98,
+      "parameter_grid": [
+        {
+          "n_estimators": 300,
+          "max_depth": 8,
+          "min_samples_leaf": 5,
+          "max_features": "sqrt",
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 8,
+          "min_samples_leaf": 20,
+          "max_features": "sqrt",
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 12,
+          "min_samples_leaf": 5,
+          "max_features": "sqrt",
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 12,
+          "min_samples_leaf": 20,
+          "max_features": "sqrt",
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 20,
+          "min_samples_leaf": 5,
+          "max_features": "sqrt",
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 20,
+          "min_samples_leaf": 20,
+          "max_features": "sqrt",
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 8,
+          "min_samples_leaf": 5,
+          "max_features": 0.5,
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 8,
+          "min_samples_leaf": 20,
+          "max_features": 0.5,
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 12,
+          "min_samples_leaf": 5,
+          "max_features": 0.5,
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 12,
+          "min_samples_leaf": 20,
+          "max_features": 0.5,
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 20,
+          "min_samples_leaf": 5,
+          "max_features": 0.5,
+          "class_weight": "balanced_subsample"
+        },
+        {
+          "n_estimators": 300,
+          "max_depth": 20,
+          "min_samples_leaf": 20,
+          "max_features": 0.5,
+          "class_weight": "balanced_subsample"
+        }
+      ]
+    },
+    "cnn": {
+      "architecture": "multiscale",
+      "selection_protocol": "all_inner_refit",
+      "input_transform": "log1p_z",
+      "class_weight_strategy": "effective_number",
+      "effective_number_beta": 0.99,
+      "dropout": 0.2,
+      "batch_size": 128,
+      "inference_batch_size": 512,
+      "patience": 15,
+      "gradient_clip_norm": 5.0,
+      "device": "auto",
+      "seeds": [20260711, 20260712, 20260713],
+      "parameter_grid": [
+        {
+          "learning_rate": 0.0003,
+          "weight_decay": 0.0001,
+          "epochs": 150
+        }
+      ]
+    }
+  }
+}
